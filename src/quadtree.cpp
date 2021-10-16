@@ -33,10 +33,10 @@ void Quadtree::subdivideNode() {
     auto y0 = this->boundary.y0;
     auto childrenSize = this->boundary.size/2;
 
-    this->q1 = new Quadtree(childrenLevel, {x0+childrenSize, y0, childrenSize});
-    this->q2 = new Quadtree(childrenLevel, {x0, y0, childrenSize});
-    this->q3 = new Quadtree(childrenLevel, {x0, y0+childrenSize, childrenSize});
-    this->q4 = new Quadtree(childrenLevel, {x0+childrenSize, y0+childrenSize, childrenSize});
+    this->q1 = new Quadtree(childrenLevel, {x0+childrenSize, y0+childrenSize, childrenSize});
+    this->q2 = new Quadtree(childrenLevel, {x0, y0+childrenSize, childrenSize});
+    this->q3 = new Quadtree(childrenLevel, {x0, y0, childrenSize});
+    this->q4 = new Quadtree(childrenLevel, {x0+childrenSize, y0, childrenSize});
 }
 
 Location Quadtree::quadrantSearch(Square _square) {

@@ -70,31 +70,32 @@ int main(int argc, char **argv) {
 
     // now we check (for each square) the colliders and assign a bool value to the squares (if it collide or not)
     vector<bool> collide(squares.size(),false);
-    for (unsigned int i(0); i < squares.size(); ++i)
-        if (collide[i] == false) {
-            auto couldCollide = quadtree.closeSquares(squares[i]);
-            
-            // [start] printing possible 'colliders'
-            cout << i << " could collide with " << couldCollide.size() << " points  > ";
-            
-            for (unsigned int j(0); j < couldCollide.size(); ++j) 
-                cout << couldCollide[j].__id << ' ';
-            cout << '\n';
-            // [end] printing possible 'colliders'
+    vector<int> comparisons(squares.size(),0);
+    for (unsigned int i(0); i < squares.size(); ++i) {
+        auto couldCollide = quadtree.closeSquares(squares[i]);
+        comparisons[i] = couldCollide.size();
 
-            auto colliders = collidingSquaresIds(squares[i], couldCollide);
-            if (!colliders.empty())
-                collide[i] = true;
-            
-            for (unsigned int j(0); j < colliders.size(); ++j)
-                collide[colliders[j]] = true;
-        }
+        // [start] printing possible 'colliders'
+        cout << i << " could collide with " << couldCollide.size() << " points  > ";
+        
+        for (unsigned int j(0); j < couldCollide.size(); ++j) 
+            cout << couldCollide[j].__id << ' ';
+        cout << '\n';
+        // [end] printing possible 'colliders'
+
+        auto colliders = collidingSquaresIds(squares[i], couldCollide);
+        if (!colliders.empty())
+            collide[i] = true;
+        
+        for (unsigned int j(0); j < colliders.size(); ++j)
+            collide[colliders[j]] = true;
+    }
 
     // save the data to a file (will be used be the python script to 'draw' the squares)
     std::ofstream outfile("./data/" + (string)argv[2]);
     outfile << window_size << endl;
     for (unsigned int i(0); i < squares.size(); ++i)
-        outfile << squares[i].x0 << "," << squares[i].y0 << "," << squares[i].size << "," << collide[i] << endl;
+        outfile << squares[i].x0 << "," << squares[i].y0 << "," << squares[i].size << "," << collide[i] << "," << comparisons[i] << endl;
 
     return EXIT_SUCCESS;
 }
